@@ -19,7 +19,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Monthly"
-            android:textSize="12pt"
+            android:textSize="11pt"
             android:textAppearance="@style/TextAppearance.AppCompat.Button"/>
 
         <TextView
@@ -29,7 +29,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Weekly"
-            android:textSize="12pt"
+            android:textSize="11pt"
             android:textAppearance="@style/TextAppearance.AppCompat.Button"/>
 
         <TextView
@@ -39,7 +39,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="Daily"
-            android:textSize="12pt"
+            android:textSize="11pt"
             android:textAppearance="@style/TextAppearance.AppCompat.Button"/>
 
     </LinearLayout>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/day_background"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/each_day"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="8pt"
+        android:gravity="center"/>
+
+    <ImageView
+        android:id="@+id/day_schedule_check"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
