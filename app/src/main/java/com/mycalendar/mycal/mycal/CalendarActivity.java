@@ -1,6 +1,8 @@
 package com.mycalendar.mycal.mycal;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +18,8 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
     SharedPreferences setting;
     SharedPreferences.Editor editor;
 
+    int mode;
+
     private TextView btn_monthly, btn_weekly, btn_daily;
 
     @Override
@@ -27,34 +31,52 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
         btn_weekly = (TextView)findViewById(R.id.weekly_btn);
         btn_daily = (TextView)findViewById(R.id.daily_btn);
 
+        //스케줄 추가 버튼
+        FloatingActionButton addSchedule = (FloatingActionButton)findViewById(R.id.add_schedule);
+
+        //마지막에 사용한 탭 저장
         setting = getSharedPreferences("setting", MODE_PRIVATE);
         editor = setting.edit();
-        int startMode = setting.getInt("mode", MONTHLY);
+        mode = setting.getInt("mode", MONTHLY);
 
         btn_monthly.setOnClickListener(this);
         btn_weekly.setOnClickListener(this);
         btn_daily.setOnClickListener(this);
+        addSchedule.setOnClickListener(this);
 
-        callFragment(startMode);
+        callFragment(mode);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.monthly_btn:
+                btn_weekly.setBackgroundResource(R.drawable.click_background);
+                btn_daily.setBackgroundResource(R.drawable.click_background);
                 callFragment(MONTHLY);
                 editor.putInt("mode", MONTHLY);
                 editor.commit();
+                mode = MONTHLY;
                 break;
             case R.id.weekly_btn:
+                btn_monthly.setBackgroundResource(R.drawable.click_background);
+                btn_daily.setBackgroundResource(R.drawable.click_background);
                 callFragment(WEEKLY);
                 editor.putInt("mode", WEEKLY);
                 editor.commit();
+                mode = WEEKLY;
                 break;
             case R.id.daily_btn:
+                btn_weekly.setBackgroundResource(R.drawable.click_background);
+                btn_monthly.setBackgroundResource(R.drawable.click_background);
                 callFragment(DAILY);
                 editor.putInt("mode", DAILY);
                 editor.commit();
+                mode = DAILY;
+                break;
+            case R.id.add_schedule:
+                Intent intent = new Intent(CalendarActivity.this, AddScheduleActivity.class);
+                startActivity(intent);
                 break;
         }
     }
@@ -65,17 +87,26 @@ public class CalendarActivity extends AppCompatActivity implements View.OnClickL
 
         switch (frag_no) {
             case MONTHLY:
+                btn_monthly.setBackgroundResource(R.color.pink);
                 transaction.replace(R.id.fragment_container, new Monthly_fragment());
                 transaction.commit();
                 break;
             case WEEKLY:
+                btn_weekly.setBackgroundResource(R.color.pink);
                 transaction.replace(R.id.fragment_container, new Weekly_fragment());
                 transaction.commit();
                 break;
             case DAILY:
+                btn_daily.setBackgroundResource(R.color.pink);
                 transaction.replace(R.id.fragment_container, new Daily_fragment());
                 transaction.commit();
                 break;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        callFragment(mode);
     }
 }

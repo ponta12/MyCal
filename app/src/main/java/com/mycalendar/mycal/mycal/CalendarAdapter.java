@@ -1,24 +1,26 @@
 package com.mycalendar.mycal.mycal;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 public class CalendarAdapter extends BaseAdapter {
-    private ArrayList<String> days;
+    private ArrayList<DayItem> days;
     private Context contexts;
     private int laySource;
     private LayoutInflater layoutInflater;
 
-    public CalendarAdapter(Context context, int resource, ArrayList<String> day) {
+    public CalendarAdapter(Context context, int resource, ArrayList<DayItem> day) {
         this.contexts = context;
         this.laySource = resource;
         this.days = day;
@@ -29,7 +31,7 @@ public class CalendarAdapter extends BaseAdapter {
     public View getView(int position, View convertview, ViewGroup parent) {
         View v = convertview;
 
-        String day = days.get(position);
+        DayItem dayItem = days.get(position);
         Each_day_flame each_day_flame;
 
         if (v == null) {
@@ -38,7 +40,7 @@ public class CalendarAdapter extends BaseAdapter {
             DisplayMetrics displayMetrics = contexts.getResources().getDisplayMetrics();
             int width = displayMetrics.widthPixels / 7;
             int restWidth = displayMetrics.widthPixels % 7;
-            int height = 840 / 6;
+            int height = displayMetrics.heightPixels  / 11;
 
             if (position % 7 == 6)
                 v.setLayoutParams(new GridView.LayoutParams(width+restWidth, height));
@@ -49,14 +51,34 @@ public class CalendarAdapter extends BaseAdapter {
 
             each_day_flame.dBackground = (LinearLayout) v.findViewById(R.id.day_background);
             each_day_flame.each_day = (TextView)v.findViewById(R.id.each_day);
+            each_day_flame.check_schedule = (ImageView)v.findViewById(R.id.day_schedule_check);
 
             v.setTag(each_day_flame);
         } else {
             each_day_flame = (Each_day_flame)v.getTag();
         }
 
-        if (day != null)
-            each_day_flame.each_day.setText(day);
+        if (dayItem != null) {
+            each_day_flame.each_day.setText(dayItem.getDay());
+            if (dayItem.isInMonth()) {
+                if (position % 7 == 0)
+                    each_day_flame.each_day.setTextColor(Color.rgb(255, 0, 0));
+                else if (position % 7 == 6)
+                    each_day_flame.each_day.setTextColor(Color.rgb(0, 0, 255));
+                else
+                    each_day_flame.each_day.setTextColor(Color.rgb(0, 0, 0));
+            } else {
+                each_day_flame.each_day.setTextColor(Color.GRAY);
+            }
+
+            if (dayItem.isSchedule()) {
+                each_day_flame.check_schedule.setBackgroundResource(R.drawable.check_mark);
+            }
+
+            if (dayItem.isToday()) {
+                each_day_flame.dBackground.setBackgroundResource(R.drawable.today_background);
+            }
+        }
 
         return v;
     }
@@ -67,7 +89,7 @@ public class CalendarAdapter extends BaseAdapter {
     }
 
     @Override
-    public String getItem(int position) {
+    public DayItem getItem(int position) {
         return days.get(position);
     }
 
@@ -79,5 +101,6 @@ public class CalendarAdapter extends BaseAdapter {
     public class Each_day_flame {
         public LinearLayout dBackground;
         public TextView each_day;
+        public ImageView check_schedule;
     }
 }
