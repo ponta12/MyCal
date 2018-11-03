@@ -19,7 +19,7 @@
             android:textStyle="bold"/>
 
         <ImageButton
-            android:id="@+id/prev_btn"
+            android:id="@+id/prev_month_btn"
             android:layout_width="50dp"
             android:layout_height="25dp"
             android:layout_toLeftOf="@id/month_text"
@@ -27,7 +27,7 @@
             android:background="@drawable/previous"/>
 
         <ImageButton
-            android:id="@+id/next_btn"
+            android:id="@+id/next_month_btn"
             android:layout_width="50dp"
             android:layout_height="25dp"
             android:layout_toRightOf="@id/month_text"

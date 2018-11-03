@@ -17,7 +17,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".CalendarActivity"/>
-        <activity android:name=".AddScheduleActivity"/>
+        <activity android:name=".AddScheduleActivity"
+            android:windowSoftInputMode="adjustResize"/>
     </application>
 
 </manifest>

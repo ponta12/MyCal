@@ -21,7 +21,7 @@ public class Monthly_fragment extends Fragment implements View.OnClickListener {
     private CalendarAdapter calendarAdapter;
     private DbOpenHelper dbOpenHelper;
 
-    Calendar currentCalendar;
+    private Calendar currentCalendar;
     private int nowDay, nowMonth, nowYear;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
@@ -29,8 +29,8 @@ public class Monthly_fragment extends Fragment implements View.OnClickListener {
 
         days = new ArrayList<DayItem>();
 
-        ImageButton prevButton = (ImageButton)view.findViewById(R.id.prev_btn);
-        ImageButton nextButton = (ImageButton)view.findViewById(R.id.next_btn);
+        ImageButton prevButton = (ImageButton)view.findViewById(R.id.prev_month_btn);
+        ImageButton nextButton = (ImageButton)view.findViewById(R.id.next_month_btn);
 
         title = (TextView)view.findViewById(R.id.month_text);
         gCalendar = (GridView)view.findViewById(R.id.calendar);
@@ -56,11 +56,11 @@ public class Monthly_fragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
-            case R.id.prev_btn:
+            case R.id.prev_month_btn:
                 currentCalendar.add(Calendar.MONTH, -1);
                 setCalendar(currentCalendar);
                 break;
-            case R.id.next_btn:
+            case R.id.next_month_btn:
                 currentCalendar.add(Calendar.MONTH, 1);
                 setCalendar(currentCalendar);
                 break;
@@ -101,7 +101,7 @@ public class Monthly_fragment extends Fragment implements View.OnClickListener {
         calendar.add(Calendar.MONTH, -1);
         prevMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         calendar.add(Calendar.MONTH, 1);
-        prevMonth -= nowDate - 2;
+        prevMonth -= nowDate - 2; //이전 달 날짜 수 = (요일번호(2~8) - 1)
 
         //날짜 ArrayList 추가
         for (int i=0; i<nowDate-1; i++) {
@@ -126,6 +126,7 @@ public class Monthly_fragment extends Fragment implements View.OnClickListener {
             days.add(dayItem);
         }
 
+        // 6 * 7 = 42 - 현재 한 달 날짜 - 요일 번호(2~8) + 2 = 마지막 날짜 + 1
         int nextMonth = 42 - endDate - nowDate + 2;
 
         for (int i=1; i<nextMonth; i++) {

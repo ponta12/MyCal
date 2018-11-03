@@ -57,9 +57,15 @@ public class DbOpenHelper {
         return mDB.insert(DataBases.CreateDB._TABLENAME, null, values);
     }
 
-    public Cursor selectMonthSchedule(int year, int month){
+    public Cursor selectMonthSchedule(int year, int month) {
         Cursor cursor = mDB.rawQuery("SELECT day FROM scheduletable WHERE year = " + year
                 + " AND month = " + month + ";", null);
+        return cursor;
+    }
+
+    public Cursor selectContent(int year, int month, int day) {
+        Cursor cursor = mDB.rawQuery("SELECT schedule FROM scheduletable WHERE year = " + year
+                + " AND month = " + month + " AND day = " + day + ";", null);
         return cursor;
     }
 }
