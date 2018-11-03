@@ -101,7 +101,10 @@ public class Monthly_fragment extends Fragment implements View.OnClickListener {
         calendar.add(Calendar.MONTH, -1);
         prevMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         calendar.add(Calendar.MONTH, 1);
-        prevMonth -= nowDate - 2; //이전 달 날짜 수 = (요일번호(2~8) - 1)
+
+        //이전 달 날짜 수 = 요일번호(2~8) - 1
+        //이전 달 시작 날짜 = 이전 달 마지막 날짜 - 이전 달 날짜 수 + 1
+        prevMonth -= nowDate - 2;
 
         //날짜 ArrayList 추가
         for (int i=0; i<nowDate-1; i++) {
@@ -126,7 +129,7 @@ public class Monthly_fragment extends Fragment implements View.OnClickListener {
             days.add(dayItem);
         }
 
-        // 6 * 7 = 42 - 현재 한 달 날짜 - 요일 번호(2~8) + 2 = 마지막 날짜 + 1
+        // 6 * 7 = 42 - 현재 한 달 날짜 - 요일 번호(2~8) + 2 = 다음달의 마지막 날짜 + 1
         int nextMonth = 42 - endDate - nowDate + 2;
 
         for (int i=1; i<nextMonth; i++) {

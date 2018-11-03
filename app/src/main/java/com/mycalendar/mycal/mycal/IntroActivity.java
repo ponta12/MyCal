@@ -16,6 +16,7 @@ public class IntroActivity extends AppCompatActivity {
         ImageView imageView = (ImageView)findViewById(R.id.intro_image);
         imageView.setImageResource(R.drawable.intro);
 
+        //1.3초 정지 후 시작
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

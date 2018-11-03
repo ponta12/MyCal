@@ -22,7 +22,8 @@
             android:text="Monthly"
             android:textSize="11pt"
             android:textColor="@drawable/click_text"
-            android:textAppearance="@style/TextAppearance.AppCompat.Button"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
+            android:fontFamily="@font/dosis_medium"/>
 
         <TextView
             android:id="@+id/weekly_btn"
@@ -33,7 +34,8 @@
             android:text="Weekly"
             android:textSize="11pt"
             android:textColor="@drawable/click_text"
-            android:textAppearance="@style/TextAppearance.AppCompat.Button"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
+            android:fontFamily="@font/dosis_medium"/>
 
         <TextView
             android:id="@+id/daily_btn"
@@ -44,7 +46,8 @@
             android:text="Daily"
             android:textSize="11pt"
             android:textColor="@drawable/click_text"
-            android:textAppearance="@style/TextAppearance.AppCompat.Button"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
+            android:fontFamily="@font/dosis_medium"/>
 
     </LinearLayout>
 

@@ -1,12 +1,14 @@
 package com.mycalendar.mycal.mycal;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -70,15 +72,40 @@ public class Daily_fragment extends Fragment implements View.OnClickListener {
 
         title.setText(year + "년 " + month + "월 " + day + "일");
 
-        ArrayList<String> schedule = new ArrayList<String>();
+        //그 날의 스케줄을 확인하여 ArrayList에 저장
+        ArrayList<ScheduleItem> schedule = new ArrayList<ScheduleItem>();
 
         Cursor cursor = dbOpenHelper.selectContent(year, month, day);
         while (cursor.moveToNext()) {
-            schedule.add(cursor.getString(cursor.getColumnIndex("schedule")));
+            ScheduleItem scheduleItem = new ScheduleItem();
+            scheduleItem.setScheduleId(cursor.getInt(cursor.getColumnIndex("_id")));
+            scheduleItem.setSchedule(cursor.getString(cursor.getColumnIndex("schedule")));
+            schedule.add(scheduleItem);
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, schedule);
+        //스케줄 어댑터 생성 및 set
+        final ScheduleAdapter adapter = new ScheduleAdapter(getActivity(), R.layout.each_schedule, schedule);
         day_list.setAdapter(adapter);
 
+        //리스트 뷰의 아이템 클릭 리스너 - 클릭 시 삭제할 수 있도록 설정
+        day_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final ScheduleItem scheduleItem = adapter.getItem(i);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("삭제하시겠습니까?")
+                        .setNegativeButton("취소", null)
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dbOpenHelper.deleteSchedule(scheduleItem.getScheduleId());
+                                setDay();
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+        });
     }
 }

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -21,7 +20,7 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
     int year, month, day;
     EditText sContent;
 
-    Calendar calendar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -42,7 +41,7 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
         btn_cancel.setOnClickListener(this);
 
         //현재 날짜로 초기화
-        calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
         month = ((calendar.get(Calendar.MONTH)) + 1);
         day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -81,11 +80,7 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
     };
 
     private void regiSchedule() {
-        //올해의 몇 째 주인지 확인
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month-1);
-        calendar.set(Calendar.DAY_OF_MONTH, day);
-        int week = calendar.get(Calendar.WEEK_OF_YEAR);
+        //스케줄 내용 변수
         String content = sContent.getText().toString();
 
         //스케줄의 내용이 없으면 다시 확인
@@ -95,9 +90,10 @@ public class AddScheduleActivity extends AppCompatActivity implements View.OnCli
             return;
         }
 
+        //스케줄을 DB에 저장
         DbOpenHelper dbOpenHelper = new DbOpenHelper(this);
         dbOpenHelper.open();
-        dbOpenHelper.insertColumn(year, month, week, day, content);
+        dbOpenHelper.insertColumn(year, month, day, content);
         dbOpenHelper.close();
 
         //확인 창 표시

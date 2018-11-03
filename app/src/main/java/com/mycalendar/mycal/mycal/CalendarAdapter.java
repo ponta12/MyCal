@@ -20,6 +20,7 @@ public class CalendarAdapter extends BaseAdapter {
     private int laySource;
     private LayoutInflater layoutInflater;
 
+    //어댑터 생성자
     public CalendarAdapter(Context context, int resource, ArrayList<DayItem> day) {
         this.contexts = context;
         this.laySource = resource;
@@ -59,7 +60,9 @@ public class CalendarAdapter extends BaseAdapter {
         }
 
         if (dayItem != null) {
+            //날짜 표시
             each_day_flame.each_day.setText(dayItem.getDay());
+            //현재 달, 이전 달과 다음 달 구분 및 평일, 토요일, 일요일 구분
             if (dayItem.isInMonth()) {
                 if (position % 7 == 0)
                     each_day_flame.each_day.setTextColor(Color.rgb(255, 0, 0));
@@ -71,10 +74,12 @@ public class CalendarAdapter extends BaseAdapter {
                 each_day_flame.each_day.setTextColor(Color.GRAY);
             }
 
+            //스케줄이 있을 시 표시
             if (dayItem.isSchedule()) {
                 each_day_flame.check_schedule.setBackgroundResource(R.drawable.check_mark);
             }
 
+            //오늘 날짜에 프레임 표시
             if (dayItem.isToday()) {
                 each_day_flame.dBackground.setBackgroundResource(R.drawable.today_background);
             }

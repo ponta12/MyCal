@@ -1,12 +1,14 @@
 package com.mycalendar.mycal.mycal;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,6 +21,7 @@ public class Weekly_fragment extends Fragment implements View.OnClickListener {
     private TextView title;
 
     private DbOpenHelper dbOpenHelper;
+    //일주일에 해당하는 7일 분량의 id와 TextView, ListView 초기화
     private int[] week_date = {R.id.week_date1, R.id.week_date2, R.id.week_date3, R.id.week_date4,
             R.id.week_date5, R.id.week_date6, R.id.week_date7};
     private int[] week_day = {R.id.week_day1, R.id.week_day2, R.id.week_day3, R.id.week_day4,
@@ -78,34 +81,66 @@ public class Weekly_fragment extends Fragment implements View.OnClickListener {
         Calendar calendar = (Calendar) currentCalendar.clone();
         int year = calendar.get(Calendar.YEAR);
         int week = calendar.get(Calendar.WEEK_OF_YEAR);
-        System.out.println(currentCalendar.get(Calendar.WEEK_OF_YEAR));
+        //한 주의 시작인 일요일이 되게 설정
         calendar.add(Calendar.DAY_OF_MONTH, -calendar.get(Calendar.DAY_OF_WEEK) + 1);
-        dbOpenHelper = new DbOpenHelper(getActivity());
-        dbOpenHelper.open();
 
         title.setText(year + "년 " + week + "주차");
 
+        dbOpenHelper = new DbOpenHelper(getActivity());
+        dbOpenHelper.open();
+
         for (int i = 0; i < 7; i++) {
+            year = calendar.get(Calendar.YEAR);
             int month = (calendar.get(Calendar.MONTH)) + 1;
             int weekd = calendar.get(Calendar.DAY_OF_WEEK);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            //날짜 정보를 빼내었으면 다음날로 변경
             calendar.add(Calendar.DAY_OF_MONTH, 1);
             String weekday = getWeekday(weekd);
-            ArrayList<String> schedule = new ArrayList<String>();
 
             wDate[i].setText(year + "년 " + month + "월 " + day + "일");
             wDay[i].setText(weekday);
 
+            //그 날의 스케줄을 확인하여 ArrayList에 저장
+            ArrayList<ScheduleItem> schedule = new ArrayList<ScheduleItem>();
+
             Cursor cursor = dbOpenHelper.selectContent(year, month, day);
             while (cursor.moveToNext()) {
-                schedule.add(cursor.getString(cursor.getColumnIndex("schedule")));
+                ScheduleItem scheduleItem = new ScheduleItem();
+                scheduleItem.setScheduleId(cursor.getInt(cursor.getColumnIndex("_id")));
+                scheduleItem.setSchedule(cursor.getString(cursor.getColumnIndex("schedule")));
+                schedule.add(scheduleItem);
             }
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, schedule);
+            //스케줄 어댑터 생성 및 set
+            final ScheduleAdapter adapter = new ScheduleAdapter(getActivity(), R.layout.each_schedule, schedule);
             wList[i].setAdapter(adapter);
+
+            //리스트 뷰의 아이템 클릭 리스너 - 클릭 시 삭제할 수 있도록 설정
+            wList[i].setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    final ScheduleItem scheduleItem = adapter.getItem(i);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage("삭제하시겠습니까?")
+                            .setNegativeButton("취소", null)
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dbOpenHelper.deleteSchedule(scheduleItem.getScheduleId());
+                                    setWeek();
+                                }
+                            })
+                            .create()
+                            .show();
+                }
+            });
         }
     }
 
+    //String 요일을 알아내기 위한 함수
     private String getWeekday(int weekd) {
         switch (weekd) {
             case 1: return "일요일";

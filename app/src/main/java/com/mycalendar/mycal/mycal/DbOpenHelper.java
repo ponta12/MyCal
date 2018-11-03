@@ -47,25 +47,32 @@ public class DbOpenHelper {
         mDB.close();
     }
 
-    public long insertColumn(int year, int month, int week, int day, String schedule) {
+    //스케줄 insert
+    public long insertColumn(int year, int month, int day, String schedule) {
         ContentValues values = new ContentValues();
         values.put(DataBases.CreateDB.YEAR, year);
         values.put(DataBases.CreateDB.MONTH, month);
-        values.put(DataBases.CreateDB.WEEK, week);
         values.put(DataBases.CreateDB.DAY, day);
         values.put(DataBases.CreateDB.SCHEDULE, schedule);
         return mDB.insert(DataBases.CreateDB._TABLENAME, null, values);
     }
 
+    //Monthly검색
     public Cursor selectMonthSchedule(int year, int month) {
         Cursor cursor = mDB.rawQuery("SELECT day FROM scheduletable WHERE year = " + year
                 + " AND month = " + month + ";", null);
         return cursor;
     }
 
+    //Weekly, Daily 검색
     public Cursor selectContent(int year, int month, int day) {
-        Cursor cursor = mDB.rawQuery("SELECT schedule FROM scheduletable WHERE year = " + year
+        Cursor cursor = mDB.rawQuery("SELECT _id, schedule FROM scheduletable WHERE year = " + year
                 + " AND month = " + month + " AND day = " + day + ";", null);
         return cursor;
+    }
+
+    //스케줄 delete
+    public void deleteSchedule(int id) {
+        mDB.delete(DataBases.CreateDB._TABLENAME, "_id = " + id, null);
     }
 }
